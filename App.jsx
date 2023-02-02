@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 import AppIntroSlider from 'react-native-app-intro-slider';
 import React, { useCallback, useState } from 'react';
+import { NativeBaseProvider } from 'native-base/src/core/NativeBaseProvider';
 import Main from './components/Main';
 
 const styles = StyleSheet.create({
@@ -96,8 +97,7 @@ export default function App() {
   }, [setIsOpenTutorial]);
 
   return (
-  // eslint-disable-next-line react/jsx-no-useless-fragment
-    <>
+    <NativeBaseProvider>
       {
           isOpenTutorial ? (
             <AppIntroSlider
@@ -107,7 +107,7 @@ export default function App() {
               onSkip={onDoneAllSlides}
             />
           ) : <Main />
-        }
-    </>
+      }
+    </NativeBaseProvider>
   );
 }
