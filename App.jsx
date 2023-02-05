@@ -1,8 +1,10 @@
 import { StyleSheet } from 'react-native';
 import AppIntroSlider from 'react-native-app-intro-slider';
 import React, { useCallback, useState } from 'react';
+// eslint-disable-next-line import/no-unresolved
 import { NativeBaseProvider } from 'native-base/src/core/NativeBaseProvider';
 import Main from './components/Main';
+import LoginScreen from './components/LoginScreen';
 
 const styles = StyleSheet.create({
   container: {
@@ -91,6 +93,7 @@ const slides = [
 
 export default function App() {
   const [isOpenTutorial, setIsOpenTutorial] = useState(true);
+  const [user, setUser] = useState();
 
   const onDoneAllSlides = useCallback(() => {
     setIsOpenTutorial(false);
@@ -99,6 +102,7 @@ export default function App() {
   return (
     <NativeBaseProvider>
       {
+        // eslint-disable-next-line no-nested-ternary
           isOpenTutorial ? (
             <AppIntroSlider
               slides={slides}
@@ -106,7 +110,7 @@ export default function App() {
               showSkipButton
               onSkip={onDoneAllSlides}
             />
-          ) : <Main />
+          ) : user ? <Main /> : <LoginScreen onUser={setUser} />
       }
     </NativeBaseProvider>
   );
