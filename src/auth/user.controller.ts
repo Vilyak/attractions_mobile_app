@@ -9,6 +9,12 @@ class CreateUserDto {
     password: string;
 }
 
+class ChangePasswordDto {
+    username: string;
+    oldPassword: string;
+    newPassword: string;
+}
+
 @Controller('auth')
 export class UserController {
     constructor(private readonly userService: UserService) {}
@@ -28,6 +34,14 @@ export class UserController {
     })
     async login(@Request() req) {
         return req.user;
-        //return this.userService.login(req.user.username, req.user.password);
+    }
+
+    @Post('change-password')
+    @ApiBody({
+        type: ChangePasswordDto,
+    })
+    async changePassword(@Body() body) {
+        const { username, oldPassword, newPassword } = body;
+        await this.userService.updatePassword(username, oldPassword, newPassword);
     }
 }

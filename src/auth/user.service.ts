@@ -35,4 +35,19 @@ export class UserService {
         const createdUser = new this.userModel({...userData, password: md5(userData.password)});
         return createdUser.save();
     }
+
+    async updatePassword(username: string, oldPassword: string, newPassword: string) {
+        const user = await this.userModel.findOne({ username });
+        if (!user) {
+            throw new Error('User not found');
+        }
+
+        const isPasswordValid = md5(oldPassword) === user.password;
+        if (!isPasswordValid) {
+            throw new Error('Incorrect password');
+        }
+
+        user.password = md5(newPassword);
+        await user.save();
+    }
 }
