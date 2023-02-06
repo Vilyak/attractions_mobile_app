@@ -110,7 +110,8 @@ export default function App() {
               showSkipButton
               onSkip={onDoneAllSlides}
             />
-          ) : user ? <Main /> : <LoginScreen onUser={setUser} />
+          ) : user ? <Main user={user} onExit={() => setUser(undefined)} />
+            : <LoginScreen onUser={setUser} />
       }
     </NativeBaseProvider>
   );

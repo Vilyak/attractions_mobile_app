@@ -3,6 +3,7 @@ import {
   Input, Button, Text, Stack, FormControl,
 } from 'native-base';
 import axios from 'axios';
+import { Alert } from 'react-native';
 
 export default function LoginScreen(props) {
   const [username, setUsername] = useState('');
@@ -10,23 +11,57 @@ export default function LoginScreen(props) {
   const [isLogin, setIsLogin] = useState(true);
 
   const handleLogin = async () => {
-    const response = await axios.post('http://192.168.8.29:3000/auth/login', {
-      username,
-      password,
-    }).catch((e) => console.error(e));
-    // eslint-disable-next-line react/destructuring-assignment,react/prop-types
-    props.onUser(response.data);
+    try {
+      const response = await axios.post('http://45.156.23.232:3000/auth/login', {
+        username,
+        password,
+      });
+      // eslint-disable-next-line react/prop-types,react/destructuring-assignment
+      props.onUser(response.data);
+    } catch (e) {
+      Alert.alert(
+        'Внимание!',
+        'Неправильно введен пароль или пользователь не найден!',
+        [
+          { text: 'Хорошо' },
+        ],
+        {
+          cancelable: true,
+        },
+      );
+    }
   };
 
   const handleSignUp = async () => {
     try {
-      const response = await axios.post('http://localhost:3000/auth/register', {
+      await axios.post('http://45.156.23.232:3000/auth/register', {
         username,
         password,
       });
-      console.log(response.data);
-    } catch (error) {
-      console.error(error);
+      Alert.alert(
+        'Успешно',
+        'Вы успешно зарегистрировались! Пожалуйста войдите в аккаунт.',
+        [
+          { text: 'Хорошо' },
+        ],
+        {
+          cancelable: true,
+        },
+      );
+      setUsername('');
+      setPassword('');
+      setIsLogin(true);
+    } catch (e) {
+      Alert.alert(
+        'Внимание!',
+        'Такой пользователь уже существует!',
+        [
+          { text: 'Хорошо' },
+        ],
+        {
+          cancelable: true,
+        },
+      );
     }
   };
 
@@ -34,27 +69,27 @@ export default function LoginScreen(props) {
     <FormControl bg="indigo.500" height="100%" paddingTop={40} paddingLeft={10} paddingRight={10}>
       <Stack space={5}>
         <Stack rounded>
-          <FormControl.Label>Username</FormControl.Label>
+          <Text marginLeft={2} marginBottom={1}>Username</Text>
           <Input bg="white" variant="underlined" value={username} p={2} placeholder="Username" onChangeText={(text) => setUsername(text)} />
         </Stack>
         <Stack>
-          <FormControl.Label>Password</FormControl.Label>
+          <Text marginLeft={2} marginBottom={1}>Password</Text>
           <Input bg="white" variant="underlined" value={password} p={2} placeholder="Password" onChangeText={(text) => setPassword(text)} />
         </Stack>
         <Stack>
           {isLogin ? (
             <Button block onPress={handleLogin}>
-              <Text>Login</Text>
+              <Text>Вход</Text>
             </Button>
           ) : (
             <Button block onPress={handleSignUp}>
-              <Text>Sign Up</Text>
+              <Text>Регистрация</Text>
             </Button>
           )}
         </Stack>
         <Button block onPress={() => setIsLogin(!isLogin)}>
           <Text>
-            {isLogin ? 'Need to Sign Up?' : 'Already have an account?'}
+            {isLogin ? 'Нужно зарегистрироваться?' : 'Уже имеешь аккаунт?'}
           </Text>
         </Button>
       </Stack>
