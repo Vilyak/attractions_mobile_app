@@ -48,7 +48,7 @@ export class UserController {
     }
 
     @Post('search/:username/:text')
-    async search(@Param('username') usr: string, @Param('username') text: string) {
+    async search(@Param('username') usr: string, @Param('text') text: string) {
         await this.userService.search(usr, text);
     }
 
