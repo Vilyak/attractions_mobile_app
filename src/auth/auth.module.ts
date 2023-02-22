@@ -4,7 +4,7 @@ import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './local.strategy';
 import { UserController } from './user.controller';
 import { MongooseModule } from '@nestjs/mongoose';
-import { UserSchema } from './schemas/user.schema';
+import { UserSchema, History, Route } from './schemas/user.schema';
 import * as mongoose from 'mongoose';
 
 @Module({
@@ -18,7 +18,7 @@ import * as mongoose from 'mongoose';
                 useFindAndModify: false,
             }),
         }),
-        MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
+        MongooseModule.forFeature([{ name: 'User', schema: UserSchema }, { name: 'History', schema: History }, { name: 'Route', schema: Route }]),
         PassportModule,
     ],
     controllers: [UserController],

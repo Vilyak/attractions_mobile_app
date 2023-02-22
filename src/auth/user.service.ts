@@ -1,12 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { User } from './interfaces/user.interface';
+import { User, History, Route } from './interfaces/user.interface';
 import * as md5 from 'md5';
 
 @Injectable()
 export class UserService {
-    constructor(@InjectModel('User') private readonly userModel: Model<User>) {}
+    constructor(
+        @InjectModel('User') private readonly userModel: Model<User>,
+        @InjectModel('History') private readonly historyModel: Model<History>,
+        @InjectModel('Route') private readonly routeModel: Model<Route>
+    ) {}
 
     async findByUsername(username: string): Promise<User> {
         return this.userModel.findOne({ username }).exec();
@@ -49,5 +53,55 @@ export class UserService {
 
         user.password = md5(newPassword);
         await user.save();
+    }
+
+    async search(username: string, text: string): Promise<User> {
+        const history = await this.historyModel.findOne({ username });
+
+        let nHistory;
+        if (history) {
+            history.states = [text, ...history.states];
+            nHistory = await history.save();
+        }
+        else {
+            const newHistory = new this.historyModel({username, states: [text]});
+            nHistory = await newHistory.save();
+        }
+
+        return nHistory;
+    }
+
+    async addPoint(username: string, point: {state: string, name: string, w: number, h: number}) {
+        const route = await this.routeModel.findOne({ username });
+        let nRoute;
+
+        if (route) {
+            const item = route.state.find(item => item.state.toLowerCase() === point.state.toLowerCase() && item.name === point.name);
+
+            if (!item) {
+                const newRoute = new this.routeModel({username, state: [...route.state, point]});
+                nRoute = await newRoute.save();
+            }
+        }
+        else {
+            const newRoute = new this.routeModel({username, state: [point]});
+            nRoute = await newRoute.save();
+        }
+
+        return nRoute;
+    }
+
+    async removePoint(username: string, state: string, pointName: string) {
+        const route = await this.routeModel.findOne({ username });
+        let nRoute = route;
+
+        if (route) {
+            const newState = route.state.filter(item => item.state.toLowerCase() !== state.toLowerCase() && item.name !== pointName);
+            route.state = newState;
+
+            nRoute = await route.save();
+        }
+
+        return nRoute;
     }
 }

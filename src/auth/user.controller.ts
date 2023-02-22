@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UseGuards, Request } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Request, Param, Delete } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './interfaces/user.interface';
 import { AuthGuard } from '@nestjs/passport';
@@ -15,7 +15,9 @@ class ChangePasswordDto {
     newPassword: string;
 }
 
-@Controller('auth')
+class AddPointDto {state: string; name: string; w: number; h: number}
+
+@Controller()
 export class UserController {
     constructor(private readonly userService: UserService) {}
 
@@ -43,5 +45,26 @@ export class UserController {
     async changePassword(@Body() body) {
         const { username, oldPassword, newPassword } = body;
         await this.userService.updatePassword(username, oldPassword, newPassword);
+    }
+
+    @Post('search/:username/:text')
+    async search(@Param('username') usr: string, @Param('username') text: string) {
+        await this.userService.search(usr, text);
+    }
+
+    @Post('point/:username')
+    @ApiBody({
+        type: AddPointDto,
+    })
+    async addPoint(@Param('username') usr: string, @Body() body) {
+        await this.userService.addPoint(usr, body);
+    }
+
+    @Delete('point/:username/:state/:point')
+    @ApiBody({
+        type: AddPointDto,
+    })
+    async removePoint(@Param('username') usr: string, @Param('state') state: string, @Param('point') point: string) {
+        await this.userService.removePoint(usr, state, point);
     }
 }
