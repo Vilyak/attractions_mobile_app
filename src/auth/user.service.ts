@@ -79,8 +79,8 @@ export class UserService {
             const item = route.state.find(item => item.state.toLowerCase() === point.state.toLowerCase() && item.name === point.name);
 
             if (!item) {
-                const newRoute = new this.routeModel({username, state: [...route.state, point]});
-                nRoute = await newRoute.save();
+                route.state = [...route.state, point];
+                nRoute = await route.save();
             }
         }
         else {
