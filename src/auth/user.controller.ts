@@ -61,9 +61,6 @@ export class UserController {
     }
 
     @Delete('point/:username/:state/:point')
-    @ApiBody({
-        type: AddPointDto,
-    })
     async removePoint(@Param('username') usr: string, @Param('state') state: string, @Param('point') point: string) {
         await this.userService.removePoint(usr, state, point);
     }

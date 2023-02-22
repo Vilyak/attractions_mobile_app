@@ -96,7 +96,7 @@ export class UserService {
         let nRoute = route;
 
         if (route) {
-            const newState = route.state.filter(item => item.state.toLowerCase() !== state.toLowerCase() && item.name !== pointName);
+            const newState = route.state.filter(item => !(item.state.toLowerCase() === state.toLowerCase() && item.name === pointName));
             route.state = newState;
 
             nRoute = await route.save();
