@@ -65,8 +65,8 @@ export class UserController {
         return await this.userService.addPoint(usr, body);
     }
 
-    @Delete('point/:username/:state/:point')
-    async removePoint(@Param('username') usr: string, @Param('state') state: string, @Param('point') point: string) {
-        return await this.userService.removePoint(usr, state, point);
+    @Delete('point/:username/:point')
+    async removePoint(@Param('username') usr: string, @Param('point') point: string) {
+        return await this.userService.removePoint(usr, point);
     }
 }

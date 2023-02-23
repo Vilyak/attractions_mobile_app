@@ -101,7 +101,7 @@ export class UserService {
         return [];
     }
 
-    async removePoint(username: string, state: string, pointName: string) {
+    async removePoint(username: string, pointName: string) {
         const route = await this.routeModel.findOne({ username });
 
         if (route) {
