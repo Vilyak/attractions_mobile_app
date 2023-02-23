@@ -88,6 +88,9 @@ export class UserService {
                 await route.save();
                 return [...route.state, point];
             }
+            else {
+                return route.state;
+            }
         }
         else {
             const newRoute = new this.routeModel({username, state: [point]});
