@@ -54,7 +54,7 @@ export class UserController {
 
     @Get('point/:username')
     async getPoints(@Param('username') usr: string) {
-        await this.userService.getPoints(usr);
+        return await this.userService.getPoints(usr);
     }
 
     @Post('point/:username')
@@ -62,11 +62,11 @@ export class UserController {
         type: AddPointDto,
     })
     async addPoint(@Param('username') usr: string, @Body() body) {
-        await this.userService.addPoint(usr, body);
+        return await this.userService.addPoint(usr, body);
     }
 
     @Delete('point/:username/:state/:point')
     async removePoint(@Param('username') usr: string, @Param('state') state: string, @Param('point') point: string) {
-        await this.userService.removePoint(usr, state, point);
+        return await this.userService.removePoint(usr, state, point);
     }
 }
