@@ -71,37 +71,44 @@ export class UserService {
         return nHistory;
     }
 
+    async getPoints(username: string) {
+        const route = await this.routeModel.findOne({username});
+
+        return route?.state || [];
+    }
+
     async addPoint(username: string, point: {state: string, name: string, w: number, h: number}) {
         const route = await this.routeModel.findOne({ username });
-        let nRoute;
 
         if (route) {
             const item = route.state.find(item => item.state.toLowerCase() === point.state.toLowerCase() && item.name === point.name);
 
             if (!item) {
                 route.state = [...route.state, point];
-                nRoute = await route.save();
+                await route.save();
+                return [...route.state, point];
             }
         }
         else {
             const newRoute = new this.routeModel({username, state: [point]});
-            nRoute = await newRoute.save();
+            await newRoute.save();
+            return [point];
         }
 
-        return nRoute;
+        return [];
     }
 
     async removePoint(username: string, state: string, pointName: string) {
         const route = await this.routeModel.findOne({ username });
-        let nRoute = route;
 
         if (route) {
             const newState = route.state.filter(item => !(item.state.toLowerCase() === state.toLowerCase() && item.name === pointName));
             route.state = newState;
 
-            nRoute = await route.save();
+            await route.save();
+            return newState;
         }
 
-        return nRoute;
+        return [];
     }
 }

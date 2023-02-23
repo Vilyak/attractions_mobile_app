@@ -53,6 +53,11 @@ export class UserController {
     }
 
     @Post('point/:username')
+    async getPoints(@Param('username') usr: string) {
+        await this.userService.getPoints(usr);
+    }
+
+    @Post('point/:username')
     @ApiBody({
         type: AddPointDto,
     })
