@@ -81,7 +81,7 @@ export class UserService {
         const route = await this.routeModel.findOne({ username });
 
         if (route) {
-            const item = route.state.find(item => item.state.toLowerCase() === point.state.toLowerCase() && item.name === point.name);
+            const item = route.state.find(item => item.name.toLowerCase() === point.name.toLowerCase());
 
             if (!item) {
                 route.state = [...route.state, point];
