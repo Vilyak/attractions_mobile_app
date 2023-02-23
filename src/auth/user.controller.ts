@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UseGuards, Request, Param, Delete } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Request, Param, Delete, Get } from "@nestjs/common";
 import { UserService } from './user.service';
 import { User } from './interfaces/user.interface';
 import { AuthGuard } from '@nestjs/passport';
@@ -52,7 +52,7 @@ export class UserController {
         await this.userService.search(usr, text);
     }
 
-    @Post('point/:username')
+    @Get('point/:username')
     async getPoints(@Param('username') usr: string) {
         await this.userService.getPoints(usr);
     }
